@@ -1,0 +1,70 @@
+     The following two features can be implemented in CHARYBDIS2 by
+     defining the preprocessor flag GINGRICH at compile time (compiler 
+     option -DGINGRICH).
+
+     Graviton bulk emission and black hole recoil according to
+     JHEP0711:064,2007 (arXiv:0706.0623 [hep-ph]).
+
+     MSSDEC additional decay option, 4= all SM particles + bulk
+            gravitons [3] 
+
+     DGTENSION brane tension used in black hole recoil calculation. If 
+            DGSB=.TRUE. DGTENSION is automatically calculated [1000.] 
+
+     String ball production and decay according to
+     Phys.Rev.D78:115009,2008 (arXiv:0808.2512 [hep-ph]). 
+
+     DGSB   flag that turns on option for string ball production and
+            decay [F] 
+
+     DGMS   the string scale (GeV) [1000.]
+
+     DGGS   string coupling. Only values in range (0,1) make sense
+            [0.3] 
+
+     When running the CHARYBDIS code with the string ball flag set
+     there are several features within the program which hinder one's
+     ability to obtain interpretable results.  To ensure that the
+     physical processes involved with string balls are represented
+     properly it is generally important to follow a few explicit
+     guidelines and ensure the appropriate options are set properly.  
+
+     The following logical parameters should be turned OFF.
+    
+     KINCUT=.FALSE. this causes earlier than optimal termination of
+                    string ball decays.
+ 
+     BHSPIN=.FALSE. string balls with spin have not yet been
+                    implemented. Also should not be used with bulk
+                    graviton emissions (MSSDEC=4).
+
+     NBODYAVERAGE=.FALSE. not yet tested for string balls.
+
+     The following Logical parameters should be turned ON.
+
+     RMBOIL=.TRUE. inclusion of the boiling remnant model is necessary
+                   to ensure string ball decay is continued until the
+                   string scale is reached. 
+	
+     NBODYPHASE=.TRUE. convolution of the phase space of decay with
+                       any product of Hawking angular spectra is not
+                       applicable for random walk phases of string
+                       ball decay.  Hence the phase spaced used should
+                       be pure.  
+
+     It is important to ensure that the following conditions are met
+     by the code before running it. 
+ 
+     THWMAX=DGMS Prevent temperature larger than the fundamental string 
+                 scale. 
+
+     RMMINM=DGMS The model of decay used for string balls is not
+                 applicable below DGMS.  Since RMBOIL=.TRUE. for string
+                 balls RMMINM needs to be set to string scale.
+
+     MPLNCK.GT.DGMS Planck scale larger than string scale is tested
+                    assumption. 
+
+     MINMSS.GT.DGMS string balls not allowed below string scale.
+
+     RECOIL=2 only this option has been tested for string balls.
