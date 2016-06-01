@@ -1,0 +1,199 @@
+    This  is  the  documentation  for release 2.001 of  the  Black  Hole
+    generator CHARYBDIS.
+
+    THIS IS A DEVELOPMENT VERSION, NOT FOR GENERAL RELEASE.
+
+    The  code is  designed  to run  either  standalone, with  HERWIG  or
+    PYTHIA. There are a few things which need to be set up.
+
+    You should have the following code:
+
+    charybdis2001.F the code for the black hole generator;
+
+    maincharybdis.f example main program for CHARYBDIS;
+    mainpythia.f example main program for PYTHIA;
+    mainherwig.f example main program for HERWIG.
+
+    charybdis2001.inc    include file for the black hole event generator
+
+    In  addition to  this  you  will  also  need  a Les  Houches  accord
+    compliant version  of either HERWIG  or PYTHIA with  both  the dummy
+    Les  Houches  routines  UPINIT  and  UPEVNT   and the  dummy  PDFLIB
+    subroutines  PDFSET and  STRUCTM  deleted.  For  HERWIG  this  means
+    version 6.500  and above, for PYTHIA  you will need a  version above
+    6.200.
+
+    Finally, you  will  need the  data files  provided to be placed in a
+    directory named data_files/ inside your execution directory.
+
+    In the Les Houches routines the beams are specified as follows:
+
+    IDBMUP(1),IDBMUP(2) PDG  codes for the beam  particles (only protons
+    and antiprotons allowed) [2212,2212]
+    EBMUP(1),EBMUP(2) energies of the beam particles [7000.,7000.]
+    Square brackets show the default values. In the HERWIG version, they
+    are  overwritten with the values deduced from the  HERWIG parameters
+    PART1, PART2 and PBEAM1, PBEAM2, so  they  must  be  set in the main 
+    program before HERWIG is called (see comments in mainherwig.f). 
+    However in  the  PYTHIA or standalone versions  they  must be  reset  
+    explicitly in COMMON/HEPRUP/ if changed.
+
+    The CHARYBDIS parameters available to the user are as follows.  They
+    have the default values  indicated,  all of  which may be changed in
+    the main program, as shown in the samples mainpythia and mainherwig. 
+
+    MPLNCK the Planck Mass [1000.]
+
+    MSSDEF whose  definition  of the  Planck  Mass  you are  using - see
+           Appendix A of hep-ph/0110127 for a comparison [2]
+
+    TOTDIM the total number of dimensions (i.e. 4+extra) [6]
+
+    GTSCA  sets momentum scale for calling the PDFs (.TRUE. is using the
+           inverse Schwarzschild  radius  and .FALSE. is using sqrt(s) -
+           see  discussion on p12  of hep-ph/0106219  but note  that the
+           cross  sections  in  this  paper  were  NOT  calculated  with
+           GTSCA=.TRUE. even though it suggests they were) [F]
+
+    MINMSS the minimum mass of the black holes to be produced [5000.]
+ 
+    MAXMSS the maximum mass of the black holes to be produced [14000.]
+
+    NBODY  the  number  of particles  produced in the decay of the black
+           hole remnant [2]
+  
+    TIMVAR time  variation  of  the  Black  Hole's  Hawking  temperature
+           (.TRUE. is on .FALSE. is off) [T]
+
+    MSSDEC the type of particles to  produce in the decay, 1= only light
+           SM  particles, 2= light SM  particles + top W/Z and 3= all SM
+           particles [3]
+
+    GRYBDY controls the use of the gray body  factors, for  GRYBDY=.TRUE.
+           the correct  D-dimensional gray body factors are used whereas
+           for GRYBDY=.FALSE. the black body spectrum is used (Note that
+           GRYBDY=.FALSE.  only  works  in  the  non-spinning case - See 
+           BHSPIN switch below) [T]
+
+    KINCUT controls  the  termination  of  the  evaporation  phase.  For
+           KINCUT=.TRUE.  the  evaporation  phase  terminates   when  an
+           emission is selected with energy  greater than the black hole
+           mass  whereas for  KINCUT=.FALSE.  the  evaporation phase  is
+           terminated  when the mass of the  black hole  remnant is less
+           than the Planck mass [F]
+
+    YRCSEC controls whether the Yoshino-Rychkov  enhancement factors are
+           used in computing the cross section (see Phys.Rev.D71:104028,
+           2005 [hep-th/0503171]) [T]
+
+    THWMAX maximum value of the  Hawking temperature (GeV).  If a larger
+           value is generated during decay, it is reset to this  [1000.]
+
+    RMBOIL controls whether to use the "boiling remnant" model, in which
+           the black hole decay continues  below the Planck scale,  with
+           temperature limited by  THWMAX.  (This option is inconsistent
+           with the use of KINCUT=.TRUE.) [F]
+
+    RMMINM minimum remnant mass. If the "boiling remnant" model is used,
+           this should be less than MPLNCK, otherwise it is set equal to
+           MPLNCK if smaller [100.]
+
+    BHSPIN controls inclusion of black hole spin effects [T]
+
+    BHJVAR if BHSPIN=.TRUE.,  allows spin axis of the black hole to vary
+           during decay [T]
+
+    BHANIS if BHSPIN=.TRUE., controls inclusion of the anisotropy of the
+           angular distribution  of emitted particles, through the  used
+           of appropriate angular functions [T]
+
+    MJLOST Controls  the  use of  a model  for loss  of mass and angular 
+           momentum during production, build up from the allowed regions
+           on  the (M,J)  plane  computed  in  Phys.Rev.D71:104028, 2005
+           [hep-th/0503171] [T]
+
+    FMLOST Controls  the  amount  of recoil between the black hole after 
+           formation,  and  the  gravitational  radiation  it loses when  
+           MJLOST=.TRUE.. (No recoil --> FMLOST=1D0). A small recoil  is
+           is necessary in the HERWIG implementation to avoid  numerical
+           problems [0.99D0] 
+
+    RMSTAB Option to include a stable remnant by the end of  the  decay.
+           Only  electrical  charges  +1,  -1 or 0  and  baryon  number
+           conserving remnants allowed [.FALSE.]    
+
+    RECOIL Uses two different models for the recoil. RECOIL=1 interprets 
+           the energy selected as the energy of the emission in the rest
+           frame of the BH  before  emission,  RECOIL=2  interprets  the 
+           selected energy as the reduction in mass of the BH [2] 
+          
+    NBODYAVERAGE Use an estimate for the expectation value of the number 
+           of emissions <N> (as given by the Hawking spectrum)  at  each 
+           stage  of  the  evaporation,  as  a  criterion  to  stop  the 
+           evaporation (example if <N> < NBODY-1 stop) [T] 
+
+    NBODYVAR   Use  a  Poisson  distribution  with  <N>  to  select  the 
+           multiplicity  of the remnant decay on an event by event basis
+           [F] 
+
+    NBODYPHASE If .TRUE. use pure phase space for the remnant decay,  if
+           .FALSE. use phase space convoluted with a product of  Hawking
+           angular spectra for each of the  particles  selected  for the 
+           decay [F]
+
+    SKIP2REMNANT Option to skip evaporation and use a remnant model only
+           [F] 
+
+    IBHPRN print out option 0= no  printout, 1= errors only, 2= errors +
+           info [1]
+
+    LHEFILENAME Name of the lhouches xml file where the events are stored. 
+           (must be 8 characters long) [lhouches]
+
+    In  the  Makefile  you must  specify  which  general  purpose  event
+    generator, i.e.
+
+    GENERATOR = CHARYBDIS (standalone)
+    GENERATOR = HERWIG  for HERWIG
+    GENERATOR = PYTHIA  for PYTHIA
+
+    whether or not you want PDFLIB or LHAPDF to be used
+
+    PDFCHOICE = PDFLIB  for PDFLIB
+    PDFCHOICE = LHAPDF  for LHAPDF (only works for standalone charybdis)
+    PDFCHOICE =         otherwise.
+
+    You  must also  specify the name of the HERWIG/PYTHIA source and the
+    location of the PDFLIB or LHAPDF library, if used  by  setting  LPDF 
+    (see examples in the Makefile)
+
+    In the HERWIG version the black hole entry in the event  record  has
+    been assigned the provisional PDG code IDHEP=40 with name 'BlacHole'.
+    Similarly, the graviton as been  asigned  IDHEP=39  and  the  stable 
+    remnants, 50 and +/- 51 for neutral and charged respectively.   
+    However this has not been implemented in the PYTHIA version.
+
+    After event generation, the black hole decay history may be found in
+    the common block BHDHIS, as follows:
+
+      PBHD(1-5,n) = 5-momentum (px,py,pz,E,m) of BH before nth emission
+      SBHD(1-3,n) = spin 3-vector of BH in its r.f. before nth emission
+      RHBHD(n),OBBHD(n),OMBHD(n),THBHD(n),NFLUXBHD(n) = horizon radius,
+      oblateness, angular velocity, Hawking temperature and total flux
+      before  nth emission;
+      NBHD = number of entries in decay history.  Thus n=NBHD gives the
+      state of the BH before the final NBODY remnant decay.
+
+    N.B. The momenta  PBHD are those before parton showering,  which may
+    differ from those reconstructed from the decay products after parton
+    showering, owing to momentum reshuffling to conserve 4-momentum.
+  
+    N.B.2 Memory allocation has been prepared for a TeV scale  model  at 
+    LHC energies. If you attempt to push beam  energies up,  the program
+    will isse error messages instructing you to increase array sizes.
+
+    This version has  been checked  for compatibility  with a variety of
+    Fortran 77 and Fortran 90 compilers.
+
+    JF & MS & BW 04/02/09
+
