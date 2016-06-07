@@ -60,7 +60,8 @@ for eventNode in lheFile.getElementsByTagName("event"):
     eventTexts = eventNode.childNodes[0].nodeValue.strip().split('\n')
 
     info = eventTexts[0].strip().split()
-    n, proc = int(info[0]), int(info[1])        
+    n, proc = int(info[0]), int(info[1])
+    n = min(n,len(eventTexts)-1)        
     weight, qscale = float(info[2]), float(info[3])
     aqed, aqcd = float(info[4]), float(info[5])
     hBhMass.Fill(qscale)
@@ -128,7 +129,7 @@ for eventNode in lheFile.getElementsByTagName("event"):
         elif absPdgId in (11, 13, 15):
             nLepton += 1
             fill(hPtLepton, pt)
-        elif absPdgId in (12, 100, 16):
+        elif absPdgId in (12, 14, 16):
             met += pt
         elif absPdgId == 25:
             nHiggs += 1
@@ -137,7 +138,7 @@ for eventNode in lheFile.getElementsByTagName("event"):
             nOthers += 1
             fill(hPtOthers, pt)
 
-        if pt > 50 and absPdgId not in (11, 13, 15):
+        if pt > 50 and absPdgId not in (12, 14, 16):
             st += pt
     if met > 50: st += met
 
